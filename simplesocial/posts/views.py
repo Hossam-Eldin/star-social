@@ -48,3 +48,28 @@ class PostDetail(SelectRelatedMixin,generic.DetailView):
         return queryset.filter(
             user__username__iexact= self.kwargs.get("username")
         )
+
+
+class CreatePost(LoginRequiredMixin,SelectRelatedMixin,generic.CreateView):
+    fields=('message','group','messages_html')
+    model = models.Post
+
+    def from_valid(self,form):
+        self.object =form.save(commit=False)
+        self.object.user =self.request.user
+        self.object.save()
+        return super().form_valid(form)
+
+
+class DeletePost(LoginRequiredMixin, SelectRelatedMixin, generic.DeleteView):
+    model = models.Post
+    select_related= ("user", "group")
+    success_url = reverse_lazy("posts:all")
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(user_id=self.request.user.id)
+
+    def delete(self, *args, **kwargs):
+        messages.success(self.request,"Post Deleted")
+        return super().delete(*args, **kwargs)    

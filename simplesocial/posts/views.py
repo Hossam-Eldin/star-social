@@ -25,7 +25,7 @@ class UserPosts(generic.ListView):
     def get_queryset(self):
         try:
             self.post_user = User.objects.prefetch_related("posts").get(
-                username_iexact =self.kwargs.get("username")
+                username__iexact=self.kwargs.get("username")
             )
         except User.DoesNotExist:
             raise Http404
@@ -51,10 +51,10 @@ class PostDetail(SelectRelatedMixin,generic.DetailView):
 
 
 class CreatePost(LoginRequiredMixin,SelectRelatedMixin,generic.CreateView):
-    fields=('message','group','messages_html')
+    fields=('message','group')
     model = models.Post
 
-    def from_valid(self,form):
+    def form_valid(self,form):
         self.object =form.save(commit=False)
         self.object.user =self.request.user
         self.object.save()
@@ -72,4 +72,4 @@ class DeletePost(LoginRequiredMixin, SelectRelatedMixin, generic.DeleteView):
 
     def delete(self, *args, **kwargs):
         messages.success(self.request,"Post Deleted")
-        return super().delete(*args, **kwargs)    
+        return super().delete(*args, **kwargs)

@@ -10,16 +10,16 @@ User = get_user_model()
 
 class Post(models.Model):
     user = models.ForeignKey(User, related_name="posts")
-    created_at = models.DataTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now=True)
     message = models.TextField()
-    message_html = models.TextField(editable=False)
+    messages_html = models.TextField(editable=True,null=False,blank=False,default='post')
     group = models.ForeignKey(Group,related_name="posts",null=True,blank=True)
 
     def __str__(self):
         return self.message
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse(

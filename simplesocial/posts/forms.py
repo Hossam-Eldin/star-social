@@ -1,10 +1,13 @@
 from django import forms
+
 from posts import models
 
+
 class PostForm(forms.ModelForm):
+
     class Meta:
-        fields = ("message", "group")
-        model = model.Post and
+        fields = ("message", "group","messages_html")
+        model = models.Post
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)
@@ -12,6 +15,6 @@ class PostForm(forms.ModelForm):
         if user is not None:
             self.fields["group"].queryset = (
                 models.Group.objects.filter(
-                    pk__in = user.groups.values_list("group__pk")
+                    pk__in=user.groups.values_list("group__pk")
                 )
             )

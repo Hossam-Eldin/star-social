@@ -38,7 +38,7 @@ class JoinGroup(LoginRequiredMixin,generic.RedirectView):
         except IntegrityError:
             messages.warning(self.request,("Warning, already a member of {}".format(group.name)))
         else :
-            messages.sucess(self.request,"You are now a member of the {} group.".format(group.name))
+            messages.success(self.request,"You are now a member of the {} group.".format(group.name))
 
         return super().get(request,*args,**kwargs)
 
@@ -60,9 +60,8 @@ class   LeaveGroup(LoginRequiredMixin,generic.RedirectView):
             )
         else:
             membership.delete()
-            messages.sucess(
+            messages.success(
                 self.request,
                 "You have successfully left this group."
             )
         return super().get(request, *args, **kwargs)
-
